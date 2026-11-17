@@ -14,7 +14,7 @@
 # define SCALARCONVERTER_HPP
 
 #include <iostream>
-#include <string_view>
+#include <string>
 
 class ScalarConverter
 {
@@ -23,10 +23,10 @@ private:
 	ScalarConverter(const ScalarConverter&);
 	ScalarConverter &operator = (const ScalarConverter&);
 	~ScalarConverter();
-	static bool parseValue(std::string_view literal, double &value);
+	static bool parseValue(const std::string &literal, double &value);
 
 public:
-	static void convert(std::string_view literal);
+	static void convert(const std::string &literal);
 };
 
 #endif

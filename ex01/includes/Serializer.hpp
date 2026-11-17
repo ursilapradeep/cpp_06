@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Serialize.hpp                                      :+:      :+:    :+:   */
+/*   Serializer.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: us <us@student.42.fr>                      +#+  +:+       +#+        */
+/*   By: uvadakku <uvadakku@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/11/08 18:52:59 by us                #+#    #+#             */
-/*   Updated: 2026/11/08 18:55:05 by us               ###   ########.fr       */
+/*   Created: 2026/11/09 17:01:20 by uvadakku          #+#    #+#             */
+/*   Updated: 2026/11/09 17:01:24 by uvadakku         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #define SERIALIZER_HPP
 
 #include "Data.hpp"
-#include <cstdint>
+#include <stdint.h>
 
 class Serializer
 {

@@ -12,12 +12,12 @@
 
 #include "ScalarConverter.hpp"
 #include <cctype>
+#include <cstdlib>
 #include <limits>
-#include <stdexcept>
 #include <string>
 
 // Parse special floating-point literals such as nan and infinity.
-static bool parsePseudoLiteral(std::string_view literal, double &value)
+static bool parsePseudoLiteral(const std::string &literal, double &value)
 {
 	if (literal == "nan" || literal == "nanf")
 	{
@@ -39,7 +39,7 @@ static bool parsePseudoLiteral(std::string_view literal, double &value)
 }
 
 // Parse a single non-digit character literal and convert it to double.
-static bool parseCharacterLiteral(std::string_view literal, double &value)
+static bool parseCharacterLiteral(const std::string &literal, double &value)
 {
 	if (literal.size() == 1
 		&& !std::isdigit(static_cast<unsigned char>(literal[0])))
@@ -51,26 +51,20 @@ static bool parseCharacterLiteral(std::string_view literal, double &value)
 }
 
 // Parse decimal input, allowing the optional f suffix for float literals.
-static bool parseNumericLiteral(std::string_view literal, double &value)
+static bool parseNumericLiteral(const std::string &literal, double &value)
 {
-	try
-	{
-		const std::string input(literal);
-		size_t idx = 0;
-		value = std::stod(input, &idx);
+	char *end;
+	const char *input = literal.c_str();
 
-		if (idx != input.size()
-			&& !(idx + 1 == input.size() && input.back() == 'f'))
-			return false;
-		return true;
-	}
-	catch (const std::exception &)
-	{
+	value = std::strtod(input, &end);
+	if (end == input)
 		return false;
-	}
+	if (*end == 'f' && *(end + 1) == '\0')
+		return true;
+	return *end == '\0';
 }
 
-bool ScalarConverter::parseValue(std::string_view literal, double &value)
+bool ScalarConverter::parseValue(const std::string &literal, double &value)
 {
 	if (parsePseudoLiteral(literal, value))
 		return true;

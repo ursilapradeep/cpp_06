@@ -1,25 +1,15 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: us <us@student.42.fr>                      +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2026/06/15 05:32:19 by uvadakku          #+#    #+#              #
-#    Updated: 2026/11/06 15:34:05 by us               ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 CXX = c++
 
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -I includes
 
-NAME = convert
+NAME = ex01
 
-SRC_DIR = srcs
+SRC_DIR = src
 OBJ_DIR = objs
 
 SRCS = main.cpp \
+	Data.cpp \
+	Serializer.cpp 
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
 
@@ -43,4 +33,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-

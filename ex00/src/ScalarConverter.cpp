@@ -15,7 +15,6 @@
 #include <cctype>
 #include <iomanip>
 #include <limits>
-#include <stdexcept>
 #include <string>
 
 ScalarConverter::ScalarConverter() {}
@@ -34,13 +33,34 @@ ScalarConverter::~ScalarConverter() {}
 
 static bool isIntegerValue(double value)
 {
-	return std::isfinite(value) && value == static_cast<long long>(value);
+	return value == value
+		&& value != std::numeric_limits<double>::infinity()
+		&& value != -std::numeric_limits<double>::infinity()
+		&& value == static_cast<long long>(value);
+}
+
+static bool isFiniteValue(double value)
+{
+	return value == value
+		&& value != std::numeric_limits<double>::infinity()
+		&& value != -std::numeric_limits<double>::infinity();
+}
+
+static bool isNaNValue(double value)
+{
+	return value != value;
+}
+
+static bool isInfiniteValue(double value)
+{
+	return value == std::numeric_limits<double>::infinity()
+		|| value == -std::numeric_limits<double>::infinity();
 }
 
 static void printChar(double value)
 {
 	std::cout << "char: ";
-	if (!std::isfinite(value)
+	if (!isFiniteValue(value)
 		|| value < std::numeric_limits<char>::min()
 		|| value > std::numeric_limits<char>::max())
 	{
@@ -57,14 +77,14 @@ static void printChar(double value)
 		{
 			std::cout << "Non displayable";
 		}
-		std::cout << '\n';
 	}
+	std::cout << '\n';
 }
 
 static void printInt(double value)
 {
 	std::cout << "int: ";
-	if (!std::isfinite(value)
+	if (!isFiniteValue(value)
 		|| value < std::numeric_limits<int>::min()
 		|| value > std::numeric_limits<int>::max())
 	{
@@ -80,9 +100,9 @@ static void printInt(double value)
 static void printFloat(double value)
 {
 	std::cout << "float: ";
-	if (std::isnan(value))
+	if (isNaNValue(value))
 		std::cout << "nanf";
-	else if (std::isinf(value))
+	else if (isInfiniteValue(value))
 	{
 		if (value < 0)
 			std::cout << "-inff";
@@ -90,18 +110,19 @@ static void printFloat(double value)
 			std::cout << "+inff";
 	}
 	else if (isIntegerValue(value))
-		std::cout << std::fixed << std::setprecision(1) << static_cast<float>(value);
+		std::cout << std::fixed << std::setprecision(1)
+			<< static_cast<float>(value) << 'f';
 	else
-		std::cout << std::defaultfloat << static_cast<float>(value);
-	std::cout << 'f' << '\n';
+		std::cout << static_cast<float>(value) << 'f';
+	std::cout << '\n';
 }
 
 static void printDouble(double value)
 {
 	std::cout << "double: ";
-	if (std::isnan(value))
+	if (isNaNValue(value))
 		std::cout << "nan";
-	else if (std::isinf(value))
+	else if (isInfiniteValue(value))
 	{
 		if (value < 0)
 			std::cout << "-inf";
@@ -111,7 +132,7 @@ static void printDouble(double value)
 	else if (isIntegerValue(value))
 		std::cout << std::fixed << std::setprecision(1) << value;
 	else
-		std::cout << std::defaultfloat << value;
+		std::cout << value;
 	std::cout << '\n';
 }
 
@@ -123,7 +144,7 @@ static void printAllTypes(double value)
 	printDouble(value);
 }
 
-void ScalarConverter::convert(std::string_view literal)
+void ScalarConverter::convert(const std::string &literal)
 {
 	double value;
 
